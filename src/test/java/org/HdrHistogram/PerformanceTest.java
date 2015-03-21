@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class PerformanceTest {
 
-	private static final int RANGE = 1000000;
+	private static final int RANGE = 1_000_000_000;
 	private static final long MIN = 1000;
 	private static final long MAX = MIN*RANGE;
 	private static final int PRECISION_DIGITS = 3;
