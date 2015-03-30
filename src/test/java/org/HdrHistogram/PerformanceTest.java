@@ -1,6 +1,7 @@
 package org.HdrHistogram;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
@@ -43,15 +44,18 @@ public class PerformanceTest {
 		
 		final long  start = System.currentTimeMillis();
 		for (int m = 0; m < NUM_CYCLES; ++m) {			
-			final MemoryEfficientHistogram histogram =  new MemoryEfficientHistogram(MIN, MAX, PRECISION);
+			final MemoryEfficientHistogram histogram =  new MemoryEfficientHistogram(0., MIN, MAX, PRECISION);
 			for (int i = 0; i < NUM_VALUES; ++i) {
 				histogram.add(TEST_DATA_DOUBLE[i], 1);
 			}
-			assertEquals(NUM_VALUES, histogram.getCount());
+			assertEquals(NUM_VALUES, histogram.getSumOfCounts());
+			assertEquals(NUM_VALUES, histogram.getTotalCount());
+			assertTrue(MIN <= histogram.getMin());
+			assertTrue(MAX >= histogram.getMax());
 		}
 		final long end = System.currentTimeMillis();
 		final double avgRecordingTimeNanos = ((end - start)*1e6)/((double)NUM_VALUES*(double)NUM_CYCLES);
-		final int countArrayLength = new MemoryEfficientHistogram(MIN, MAX, PRECISION).counts.length;
+		final int countArrayLength = new MemoryEfficientHistogram(0., MIN, MAX, PRECISION).counts.length;
 		System.out.println("Avg recording time MemoryEfficientHistogram (for double data) = " + avgRecordingTimeNanos + "ns.");
 		System.out.println("Size of count array of MemoryEfficientHistogram = " + countArrayLength);
 	}
@@ -101,15 +105,18 @@ public class PerformanceTest {
 		
 		final long  start = System.currentTimeMillis();
 		for (int m = 0; m < NUM_CYCLES; ++m) {			
-			final MemoryEfficientHistogram histogram =  new MemoryEfficientHistogram(MIN, MAX, PRECISION);
+			final MemoryEfficientHistogram histogram =  new MemoryEfficientHistogram(MIN, 0., MAX, PRECISION);
 			for (int i = 0; i < NUM_VALUES; ++i) {
 				histogram.add(TEST_DATA_LONG[i], 1);
 			}
-			assertEquals(NUM_VALUES, histogram.getCount());
+			assertEquals(NUM_VALUES, histogram.getSumOfCounts());
+			assertEquals(NUM_VALUES, histogram.getTotalCount());
+			assertTrue(MIN <= histogram.getMin());
+			assertTrue(MAX >= histogram.getMax());
 		}
 		final long end = System.currentTimeMillis();
 		final double avgRecordingTimeNanos = ((end - start)*1e6)/((double)NUM_VALUES*(double)NUM_CYCLES);
-		final int countArrayLength = new MemoryEfficientHistogram(MIN, MAX, PRECISION).counts.length;
+		final int countArrayLength = new MemoryEfficientHistogramLong(MIN, MAX, PRECISION).counts.length;
 		System.out.println("Avg recording time MemoryEfficientHistogram (for long data) = " + avgRecordingTimeNanos + "ns.");
 		System.out.println("Size of count array of MemoryEfficientHistogram = " + countArrayLength);
 	}
